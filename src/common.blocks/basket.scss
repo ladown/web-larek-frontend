@@ -1,39 +1,42 @@
-@use "variables" as *;
-@use "mixins";
+@use 'variables' as *;
+@use 'mixins';
 
 .basket {
-  @include mixins.flex(column);
-  gap: 2rem;
-  height: 100%;
+	@include mixins.flex(column);
 
-  &__list {
-    padding: 0;
-    margin: 0;
-    flex-grow: 1;
-  }
+	gap: 2rem;
+	height: 100%;
 
-  &__item {
-    border-bottom: 1px solid $primary;
-    padding: 1.5rem 0;
+	&__list {
+		flex-grow: 1;
+		padding: 0;
+		margin: 0;
+	}
 
-    &-index {
-      @include mixins.flex(row);
-      justify-content: center;
-      align-items: center;
-      font-size: 1.5rem;
-      width: 55px;
-      height: 55px;
-      border-radius: 50%;
-      background-color: $primary;
-      color: white;
-      margin-right: 1rem;
-    }
+	&__item {
+		padding: 1.5rem 0;
+		border-bottom: 1px solid $primary;
 
-    &-delete {
-      @include mixins.icon(2rem, 'trash');
-      @include mixins.link($hover, white);
-      opacity: 0.5;
-      margin-left: 4rem;
-    }
-  }
+		&-index {
+			@include mixins.flex(row);
+
+			align-items: center;
+			justify-content: center;
+			width: 55px;
+			height: 55px;
+			margin-right: 1rem;
+			font-size: 1.5rem;
+			color: #fff;
+			background-color: $primary;
+			border-radius: 50%;
+		}
+
+		&-delete {
+			@include mixins.icon(2rem, 'trash');
+			@include mixins.link($hover, #fff);
+
+			margin-left: 4rem;
+			opacity: 0.5;
+		}
+	}
 }

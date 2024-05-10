@@ -1,37 +1,39 @@
-@use "variables" as *;
-@use "mixins";
+@use 'sass:color';
+@use 'variables' as *;
+@use 'mixins';
 
 .form {
-  @include mixins.flex(column);
-  gap: 1.5rem;
-  border-radius: 3rem;
+	@include mixins.flex(column);
 
-  &__label {
-    flex-grow: 1;
-  }
+	gap: 1.5rem;
+	border-radius: 3rem;
 
-  &__input {
-    background: transparent;
-    color: white;
-    border: $defaultBorder;
-    border-radius: 1.5rem;
-    padding: 1rem;
-    font-size: 1.4rem;
-    width: 100%;
-    box-sizing: border-box;
-    outline-color: $secondary;
+	&__label {
+		flex-grow: 1;
+	}
 
-    &:focus {
-      outline-style: solid;
-    }
+	&__input {
+		box-sizing: border-box;
+		width: 100%;
+		padding: 1rem;
+		font-size: 1.4rem;
+		color: #fff;
+		background: transparent;
+		border: $defaultBorder;
+		border-radius: 1.5rem;
+		outline-color: $secondary;
 
-    &:invalid {
-      border-color: $error;
-      outline-color: $error;
-    }
+		&:focus {
+			outline-style: solid;
+		}
 
-    &::placeholder {
-      color: lighten($primaryLight, 23%);
-    }
-  }
+		&:invalid {
+			border-color: $error;
+			outline-color: $error;
+		}
+
+		&::placeholder {
+			color: color.adjust($primaryLight, $lightness: 23%);
+		}
+	}
 }

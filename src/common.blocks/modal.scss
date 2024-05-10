@@ -1,70 +1,75 @@
-@use "variables" as *;
-@use "mixins";
+@use 'variables' as *;
+@use 'mixins';
 
 .modal {
-  @include mixins.sublayer;
-  height: max-content;
-  position: absolute;
-  display: none;
-  justify-content: center;
-  background-color: $overlayBackground;
-  z-index: 100;
-  padding-top: 5vh;
-  padding-bottom: 5vh;
+	@include mixins.sublayer;
 
-  &_active {
-    display: flex;
-  }
+	position: absolute;
+	z-index: 100;
+	display: none;
+	justify-content: center;
+	height: max-content;
+	padding-top: 5vh;
+	padding-bottom: 5vh;
+	background-color: $overlayBackground;
 
-  &__container {
-    @include mixins.container;
-    @include mixins.flex(column);
-    gap: $defaultPadding;
-    background-color: $background;
-    min-height: 90vmin;
-    border-radius: 3rem;
-    box-sizing: border-box;
-    position: relative;
-  }
+	&_active {
+		display: flex;
+	}
 
-  &__content {
-    flex-grow: 1;
-  }
+	&__container {
+		@include mixins.container;
+		@include mixins.flex(column);
 
-  &__title {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 400;
-  }
+		position: relative;
+		box-sizing: border-box;
+		gap: $defaultPadding;
+		min-height: 90vmin;
+		background-color: $background;
+		border-radius: 3rem;
+	}
 
-  &__actions {
-    @include mixins.flex(row);
-    align-items: center;
-    gap: 2rem;
-  }
+	&__content {
+		flex-grow: 1;
+	}
 
-  &__close {
-    position: absolute;
-    top: calc(#{$defaultPadding} / 2);
-    right: calc(#{$defaultPadding} / 2);
-    @include mixins.icon(2rem, 'close');
-    @include mixins.link(white, $hover);
-  }
+	&__title {
+		margin: 0;
+		font-size: 1.5rem;
+		font-weight: 400;
+	}
 
-  &__footer {
-    @include mixins.flex(row);
-    align-items: center;
-    gap: 2rem;
-  }
+	&__actions {
+		@include mixins.flex(row);
 
-  &__message {
-    white-space:nowrap;
-    max-width: 60%;
-    text-overflow: ellipsis;
-    overflow: hidden;
+		gap: 2rem;
+		align-items: center;
+	}
 
-    &_error {
-      color: $error;
-    }
-  }
+	&__close {
+		position: absolute;
+		top: calc(#{$defaultPadding} / 2);
+		right: calc(#{$defaultPadding} / 2);
+
+		@include mixins.icon(2rem, 'close');
+		@include mixins.link(white, $hover);
+	}
+
+	&__footer {
+		@include mixins.flex(row);
+
+		gap: 2rem;
+		align-items: center;
+	}
+
+	&__message {
+		max-width: 60%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+
+		&_error {
+			color: $error;
+		}
+	}
 }

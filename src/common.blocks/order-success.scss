@@ -1,21 +1,23 @@
-@use "variables" as *;
-@use "mixins";
+@use 'variables' as *;
+@use 'mixins';
 
 .order-success {
-  @include mixins.flex(column);
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  gap: 1rem;
+	@include mixins.flex(column);
 
-  &::before {
-    content: " ";
-    @include mixins.background('../images/Subtract.png');
-    width: 256px;
-    height: 256px;
-  }
+	gap: 1rem;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
 
-  &__close {
-    margin-top: 2rem;
-  }
+	&::before {
+		width: 256px;
+		height: 256px;
+		content: ' ';
+
+		@include mixins.background('../images/Subtract.png');
+	}
+
+	&__close {
+		margin-top: 2rem;
+	}
 }
