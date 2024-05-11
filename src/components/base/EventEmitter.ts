@@ -1,32 +1,32 @@
-type EventName = string | RegExp;
+type TEventName = string | RegExp;
 // eslint-disable-next-line @typescript-eslint/ban-types
-type Subscriber = Function;
-type EmitterEvent = {
+type TSubscriber = Function;
+type TEmitterEvent = {
 	eventName: string;
 	data: unknown;
 };
 
-export interface IEvents {
-	on<T extends object>(event: EventName, callback: (data: T) => void): void;
+export interface IEventEmitter {
+	on<T extends object>(event: TEventName, callback: (data: T) => void): void;
 	emit<T extends object>(event: string, data?: T): void;
 	trigger<T extends object>(event: string, context?: Partial<T>): (data: T) => void;
 }
 
-export class EventEmitter implements IEvents {
-	_events: Map<EventName, Set<Subscriber>>;
+export class EventEmitter implements IEventEmitter {
+	_events: Map<TEventName, Set<TSubscriber>>;
 
 	constructor() {
-		this._events = new Map<EventName, Set<Subscriber>>();
+		this._events = new Map<TEventName, Set<TSubscriber>>();
 	}
 
-	on<T extends object>(eventName: EventName, callback: (event: T) => void) {
+	on<T extends object>(eventName: TEventName, callback: (event: T) => void) {
 		if (!this._events.has(eventName)) {
-			this._events.set(eventName, new Set<Subscriber>());
+			this._events.set(eventName, new Set<TSubscriber>());
 		}
 		this._events.get(eventName)?.add(callback);
 	}
 
-	off(eventName: EventName, callback: Subscriber) {
+	off(eventName: TEventName, callback: TSubscriber) {
 		if (this._events.has(eventName)) {
 			this._events.get(eventName)!.delete(callback);
 			if (this._events.get(eventName)?.size === 0) {
@@ -43,12 +43,12 @@ export class EventEmitter implements IEvents {
 		});
 	}
 
-	onAll(callback: (event: EmitterEvent) => void) {
+	onAll(callback: (event: TEmitterEvent) => void) {
 		this.on('*', callback);
 	}
 
 	offAll() {
-		this._events = new Map<string, Set<Subscriber>>();
+		this._events = new Map<string, Set<TSubscriber>>();
 	}
 
 	trigger<T extends object>(eventName: string, context?: Partial<T>) {

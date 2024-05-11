@@ -10,6 +10,14 @@ export function isEmpty(value: any): boolean {
 	return value === null || value === undefined;
 }
 
+export function capitalize(value: string): string {
+	return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+export function formatNumber(x: number, sep = ' ') {
+	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, sep);
+}
+
 export type SelectorCollection<T> = string | NodeListOf<Element> | T[];
 
 export function ensureAllElements<T extends HTMLElement>(
@@ -68,18 +76,12 @@ export function getObjectProperties(obj: object, filter?: (name: string, prop: P
 		.map(([name, prop]) => name);
 }
 
-/**
- * Устанавливает dataset атрибуты элемента
- */
 export function setElementData<T extends Record<string, unknown> | object>(el: HTMLElement, data: T) {
 	for (const key in data) {
-		el.dataset[key] = String(data[key]);
+		el.setAttribute(key, String(data[key]));
 	}
 }
 
-/**
- * Получает типизированные данные из dataset атрибутов элемента
- */
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function getElementData<T extends Record<string, unknown>>(el: HTMLElement, scheme: Record<string, Function>): T {
 	const data: Partial<T> = {};
@@ -89,9 +91,6 @@ export function getElementData<T extends Record<string, unknown>>(el: HTMLElemen
 	return data as T;
 }
 
-/**
- * Проверка на простой объект
- */
 export function isPlainObject(obj: unknown): obj is object {
 	const prototype = Object.getPrototypeOf(obj);
 	return prototype === Object.getPrototypeOf({}) || prototype === null;
@@ -101,11 +100,6 @@ export function isBoolean(v: unknown): v is boolean {
 	return typeof v === 'boolean';
 }
 
-/**
- * Фабрика DOM-элементов в простейшей реализации
- * здесь не учтено много факторов
- * в интернет можно найти более полные реализации
- */
 export function createElement<T extends HTMLElement>(
 	tagName: keyof HTMLElementTagNameMap,
 	props?: Partial<Record<keyof T, string | boolean | object>>,
@@ -129,4 +123,30 @@ export function createElement<T extends HTMLElement>(
 		}
 	}
 	return element;
+}
+
+type Callback<T> = (key: string, value: unknown) => void;
+
+export function makeObservable<T extends object>(obj: T, callback: Callback<T>): T {
+	return new Proxy(obj, {
+		get(target: T & Record<string, unknown>, key: string): any {
+			const value = target[key];
+
+			if (value && typeof value === 'object') {
+				return makeObservable(value, (nestedKey, nestedValue) => {
+					const fullPath = `${key}.${nestedKey}`;
+					callback(fullPath, nestedValue);
+				});
+			}
+
+			return value;
+		},
+		set(target: T, key: string, value: unknown, receiver: T): boolean {
+			const success = Reflect.set(target, key, value, receiver);
+			if (success) {
+				callback(key, value);
+			}
+			return success;
+		},
+	});
 }
