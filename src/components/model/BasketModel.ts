@@ -4,7 +4,6 @@ import { IEventEmitter } from '../base/EventEmitter.js';
 
 export class BasketModel extends Model<IBasketModel> {
 	protected _count: number;
-	protected _elements: HTMLElement[];
 	protected _items: string[];
 	protected _total: number;
 
@@ -12,7 +11,6 @@ export class BasketModel extends Model<IBasketModel> {
 		super(data, events);
 
 		this._count = 0;
-		this._elements = [];
 		this._items = [];
 		this._total = 0;
 	}
@@ -23,14 +21,6 @@ export class BasketModel extends Model<IBasketModel> {
 
 	get count(): number {
 		return this._count;
-	}
-
-	set elements(value: HTMLElement[]) {
-		this._elements = value;
-	}
-
-	get elements(): HTMLElement[] {
-		return this._elements;
 	}
 
 	set items(value: string | string[]) {

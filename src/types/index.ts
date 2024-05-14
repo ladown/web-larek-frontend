@@ -7,6 +7,10 @@ export interface ICardModel {
 	price: number | null;
 }
 
+export interface ICardViewActions {
+	onClick?: () => void;
+}
+
 export interface ICatalog {
 	total: number;
 	items: ICardModel[];
@@ -27,7 +31,6 @@ export interface ICommonErrorResponse {
 
 export interface IBasketModel {
 	count: number;
-	elements: HTMLElement[];
 	items: string[];
 	total: number;
 }
@@ -57,4 +60,12 @@ export interface INotifyView {
 	text: string;
 	buttonModifier: string;
 	buttonText: string;
+}
+
+export type TOrderRequest = IOrderFields & Pick<IBasketModel, 'items' | 'total'>;
+
+export interface IWebLarekAPI {
+	getProducts(): Promise<ICatalog>;
+	getProduct(id: string): Promise<ICardModel>;
+	postOrder(order: TOrderRequest): Promise<IOrderResult>;
 }

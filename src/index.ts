@@ -16,9 +16,12 @@ import { BasketView } from './components/view/BasketView';
 import { ModalView } from './components/view/ModalView';
 
 // presenter import
-import { BasketPresenter } from './components/presenter/BasketPresenter';
+
+// common import
+import { WebLarekAPI } from './components/common/WebLarekAPI';
 
 // other import
+import { API_URL, CDN_URL } from './utils/constants';
 import { cloneTemplate, createElement, ensureElement } from './utils/utils';
 
 // declarations
@@ -32,6 +35,7 @@ const contactsTemplate = ensureElement<HTMLTemplateElement>('#contacts');
 
 // global declaration
 const events = new EventEmitter();
+const api = new WebLarekAPI(CDN_URL, API_URL);
 
 // model declaration
 // const basketModel = new BasketModel({}, events);
@@ -40,8 +44,5 @@ const events = new EventEmitter();
 const modalView = new ModalView(ensureElement<HTMLElement>('#modal-container'), events);
 
 // presenter declaration
-const basketPresenter = new BasketPresenter(events);
 
 // @ts-ignore
-// window.modalView = modalView;
-// window.events = events;
