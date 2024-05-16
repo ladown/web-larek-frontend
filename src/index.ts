@@ -16,7 +16,6 @@ import { CardBasketView } from './components/view/CardBasketView';
 import { BasketView } from './components/view/BasketView';
 import { ModalView } from './components/view/ModalView';
 import { NotifyView } from './components/view/NotifyView';
-import { LoaderView } from './components/view/LoaderView';
 import { OrderView } from './components/view/OrderView';
 
 import { WebLarekAPI } from './components/common/WebLarekAPI';
@@ -63,7 +62,7 @@ const basketView = new BasketView(
 		},
 	}).render(),
 );
-const loaderView = new LoaderView(cloneTemplate(loaderTemplate));
+const loaderView = new NotifyView(cloneTemplate(loaderTemplate));
 const successView = new NotifyView(cloneTemplate(successTemplate), {
 	onClick() {
 		modalView.render({
