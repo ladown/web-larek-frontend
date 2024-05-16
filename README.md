@@ -1,5 +1,7 @@
 # Проектная работа "Веб-ларек"
 
+GitHub Page: https://ladown.github.io/web-larek-frontend/
+
 Стек: HTML, SCSS, TS, Webpack
 
 Структура проекта:
