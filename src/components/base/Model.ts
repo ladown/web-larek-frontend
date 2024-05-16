@@ -1,4 +1,4 @@
-import { IEventEmitter } from './EventEmitter';
+import { IEventEmitter } from '../../types/';
 
 // Гарда для проверки на модель
 export const isModel = (obj: unknown): obj is Model<any> => {

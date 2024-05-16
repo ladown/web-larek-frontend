@@ -1,5 +1,5 @@
 import { Api } from '../base/api';
-import { ICardModel, ICatalog, IOrderResult, IWebLarekAPI, TOrderRequest } from '../../types/';
+import { TCard, ICatalog, IOrderResult, IWebLarekAPI, TOrderRequest } from '../../types/';
 
 export class WebLarekAPI implements IWebLarekAPI {
 	readonly cdn: string;
@@ -24,8 +24,8 @@ export class WebLarekAPI implements IWebLarekAPI {
 		});
 	}
 
-	async getProduct(id: string): Promise<ICardModel> {
-		return this.api.get(`/product/${id}`).then((data: ICardModel) => ({
+	async getProduct(id: string): Promise<TCard> {
+		return this.api.get(`/product/${id}`).then((data: TCard) => ({
 			...data,
 			image: `${this.cdn}${data.image}`,
 		}));

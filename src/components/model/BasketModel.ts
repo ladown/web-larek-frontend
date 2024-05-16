@@ -1,14 +1,13 @@
 import { Model } from '../base/Model';
-import { IBasketModel } from '../../types';
-import { IEventEmitter } from '../base/EventEmitter.js';
+import { IBasketModel, IEventEmitter } from '../../types';
 import { CardModel } from './CardModel.js';
 
-export class BasketModel extends Model<IBasketModel> {
+export class BasketModel extends Model<IBasketModel<string>> {
 	protected _count: number;
 	protected _items: string[];
 	protected _total: number;
 
-	constructor(data: Partial<IBasketModel>, events: IEventEmitter) {
+	constructor(data: Partial<IBasketModel<string>>, events: IEventEmitter) {
 		super(data, events);
 
 		this._count = 0;

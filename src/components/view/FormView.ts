@@ -1,5 +1,5 @@
 import { View } from '../base/View';
-import { IEventEmitter } from '../base/EventEmitter';
+import { IEventEmitter } from '../../types/';
 import { ensureElement } from '../../utils/utils';
 
 interface IForm {

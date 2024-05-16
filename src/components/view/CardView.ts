@@ -1,8 +1,8 @@
 import { View } from '../base/View';
-import { ICardBasketView, ICardModel, ICardViewActions } from '../../types/';
+import { TCardCatalogView, TCardBasketView, TCardPreviewView, ICardViewActions } from '../../types/';
 import { ensureElement } from '../../utils/utils';
 
-export class CardView extends View<ICardModel> {
+export class CardView<T> extends View<T> {
 	protected _category: HTMLSpanElement;
 	protected _title: HTMLTitleElement;
 	protected _image: HTMLImageElement;
@@ -48,13 +48,13 @@ export class CardView extends View<ICardModel> {
 	}
 }
 
-export class CardCatalogView extends CardView {
+export class CardCatalogView extends CardView<TCardCatalogView> {
 	constructor(container: HTMLButtonElement, actions?: ICardViewActions) {
 		super(container, actions);
 	}
 }
 
-export class CardPreviewView extends CardView {
+export class CardPreviewView extends CardView<TCardPreviewView> {
 	protected _description: HTMLParagraphElement;
 
 	constructor(container: HTMLElement, actions?: ICardViewActions) {
@@ -73,7 +73,7 @@ export class CardPreviewView extends CardView {
 	}
 }
 
-export class CardBasketView extends View<ICardBasketView> {
+export class CardBasketView extends View<TCardBasketView> {
 	protected _label: HTMLSpanElement;
 	protected _title: HTMLSpanElement;
 	protected _price: HTMLSpanElement;

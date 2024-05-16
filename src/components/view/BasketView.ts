@@ -1,9 +1,8 @@
 import { View } from '../base/View';
-import { IEventEmitter } from '../base/EventEmitter';
-import { IBasketView } from '../../types/';
+import { IBasketModel, IEventEmitter } from '../../types/';
 import { ensureElement, formatNumber } from '../../utils/utils';
 
-export class BasketView extends View<IBasketView> {
+export class BasketView extends View<IBasketModel<HTMLElement>> {
 	protected _trigger: HTMLButtonElement;
 	protected _count: HTMLSpanElement;
 	protected _title: HTMLTitleElement;

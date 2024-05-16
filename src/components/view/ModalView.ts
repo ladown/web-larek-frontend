@@ -1,10 +1,6 @@
 import { View } from '../base/View';
 import { ensureElement } from '../../utils/utils';
-import { IEventEmitter } from '../base/EventEmitter.js';
-
-interface IModalView {
-	content: HTMLElement | null;
-}
+import { IModalView, IEventEmitter } from '../../types/';
 
 export class ModalView extends View<IModalView> {
 	protected _closeButton: HTMLButtonElement;

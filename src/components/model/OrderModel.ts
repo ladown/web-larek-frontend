@@ -1,6 +1,5 @@
 import { Model } from '../base/Model.ts';
-import { IOrderModel, TFormErrors, IOrderFields, TOrderPayment } from '../../types/';
-import { IEventEmitter } from '../base/EventEmitter.ts';
+import { IOrderModel, TFormErrors, IOrderFields, TOrderPayment, IEventEmitter } from '../../types/';
 
 export class OrderModel extends Model<IOrderModel> {
 	protected _fields: IOrderFields;

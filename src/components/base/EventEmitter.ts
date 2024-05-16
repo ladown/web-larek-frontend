@@ -1,16 +1,4 @@
-type TEventName = string | RegExp;
-// eslint-disable-next-line @typescript-eslint/ban-types
-type TSubscriber = Function;
-type TEmitterEvent = {
-	eventName: string;
-	data: unknown;
-};
-
-export interface IEventEmitter {
-	on<T extends object>(event: TEventName, callback: (data: T) => void): void;
-	emit<T extends object>(event: string, data?: T): void;
-	trigger<T extends object>(event: string, context?: Partial<T>): (data: T) => void;
-}
+import { TEventName, TSubscriber, TEmitterEvent, IEventEmitter } from '../../types/index';
 
 export class EventEmitter implements IEventEmitter {
 	_events: Map<TEventName, Set<TSubscriber>>;

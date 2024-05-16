@@ -1,6 +1,6 @@
 import { View } from '../base/View';
 import { ensureElement } from '../../utils/utils';
-import { IEventEmitter } from '../base/EventEmitter';
+import { IEventEmitter } from '../../types/';
 
 export class Page extends View<HTMLElement> {
 	protected _pageWrapper: HTMLElement;

@@ -1,3 +1,18 @@
+export type TEventName = string | RegExp;
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type TSubscriber = Function;
+export type TEmitterEvent = {
+	eventName: string;
+	data: unknown;
+};
+
+export interface IEventEmitter {
+	on<T extends object>(event: TEventName, callback: (data: T) => void): void;
+	emit<T extends object>(event: string, data?: T): void;
+	trigger<T extends object>(event: string, context?: Partial<T>): (data: T) => void;
+}
+
+export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
 export interface ICardModel {
 	id: string;
 	description: string;
@@ -5,15 +20,17 @@ export interface ICardModel {
 	title: string;
 	category: string;
 	price: string | number | null;
-	categoryModifier?: string;
+	categoryModifier: string;
 	buttonState: boolean;
 }
 
-export interface ICardBasketView {
-	label: number;
-	title: string;
-	price: string;
-}
+export type TCard = Pick<ICardModel, 'id' | 'description' | 'image' | 'title' | 'category' | 'price'>;
+
+export type TCardCatalogView = Pick<TCard, 'id' | 'category' | 'title' | 'image' | 'price'> & { categoryModifier: string };
+
+export type TCardPreviewView = ICardModel & { categoryModifier: string; buttonState: boolean };
+
+export type TCardBasketView = Pick<ICardModel, 'title' | 'price'> & { label: number };
 
 export interface ICardViewActions {
 	onClick?: () => void;
@@ -21,12 +38,12 @@ export interface ICardViewActions {
 
 export interface ICatalog {
 	total: number;
-	items: ICardModel[];
+	items: TCard[];
 }
 
 export type TOrderPayment = 'online' | 'cash';
 
-export type TOrderModel = IOrderFields & Pick<IBasketModel, 'total' | 'items'>;
+export type TOrderModel = IOrderFields & Pick<IBasketModel<string>, 'total' | 'items'>;
 
 export interface IOrderResult {
 	id: string;
@@ -37,15 +54,9 @@ export interface ICommonErrorResponse {
 	error: string;
 }
 
-export interface IBasketView {
+export interface IBasketModel<T> {
 	count: number;
-	items: HTMLElement[];
-	total: number;
-}
-
-export interface IBasketModel {
-	count: number;
-	items: string[];
+	items: T[];
 	total: number;
 }
 
@@ -82,10 +93,14 @@ export interface INotifyViewActions {
 	onClick?: () => void;
 }
 
-export type TOrderRequest = IOrderFields & Pick<IBasketModel, 'items' | 'total'>;
+export type TOrderRequest = IOrderFields & Pick<IBasketModel<string>, 'items' | 'total'>;
 
 export interface IWebLarekAPI {
 	getProducts(): Promise<ICatalog>;
-	getProduct(id: string): Promise<ICardModel>;
+	getProduct(id: string): Promise<TCard>;
 	postOrder(order: TOrderRequest): Promise<IOrderResult>;
+}
+
+export interface IModalView {
+	content: HTMLElement | null;
 }
