@@ -1,19 +1,14 @@
 import './scss/styles.scss';
 
-// imports
-// types import
-import { IOrderFields, IOrderFormErrors } from './types';
+import { IOrderFields, IOrderFormErrors, TOrderRequest } from './types';
 
-// base import
 import { EventEmitter } from './components/base/EventEmitter';
 
-// model import
 import { CatalogModel } from './components/model/CatalogModel';
 import { CardModel } from './components/model/CardModel';
 import { BasketModel } from './components/model/BasketModel';
 import { OrderModel } from './components/model/OrderModel';
 
-// view import
 import { CatalogView } from './components/view/CatalogView';
 import { CardCatalogView, CardPreviewView, CardBasketView } from './components/view/CardView';
 import { BasketView } from './components/view/BasketView';
@@ -22,18 +17,12 @@ import { NotifyView } from './components/view/NotifyView';
 import { LoaderView } from './components/view/LoaderView';
 import { OrderView } from './components/view/OrderView';
 
-// presenter import
-
-// common import
 import { WebLarekAPI } from './components/common/WebLarekAPI';
 import { Page } from './components/common/Page';
 
-// other import
 import { API_URL, CDN_URL } from './utils/constants';
-import { cloneTemplate, getObjectLength, ensureElement } from './utils/utils';
+import { cloneTemplate, getObjectLength, ensureElement, formatNumber } from './utils/utils';
 
-// declarations
-// templates declaration
 const successTemplate = ensureElement<HTMLTemplateElement>('#success');
 const emptyTemplate = ensureElement<HTMLTemplateElement>('#empty');
 const cardCatalogTemplate = ensureElement<HTMLTemplateElement>('#card-catalog');
@@ -46,17 +35,14 @@ const loaderTemplate = ensureElement<HTMLTemplateElement>('#loader');
 const errorTemplate = ensureElement<HTMLTemplateElement>('#error');
 const deleteConfirmTemplate = ensureElement<HTMLTemplateElement>('#delete-confirm');
 
-// global declaration
 const events = new EventEmitter();
 const api = new WebLarekAPI(CDN_URL, API_URL);
 const page = new Page(document.body, events);
 
-// model declaration
 const catalogModel = new CatalogModel({}, events);
 const basketModel = new BasketModel({}, events);
 const orderModel = new OrderModel({}, events);
 
-// view declaration
 const catalogView = new CatalogView(document.body);
 const modalView = new ModalView(ensureElement<HTMLElement>('#modal-container'), events);
 const basketView = new BasketView(
@@ -71,13 +57,19 @@ const basketView = new BasketView(
 	}).render(),
 );
 const loaderView = new LoaderView(cloneTemplate(loaderTemplate));
+const successView = new NotifyView(cloneTemplate(successTemplate), {
+	onClick() {
+		modalView.render({
+			content: null,
+		});
+	},
+});
 
 const orderViews = {
 	details: new OrderView(cloneTemplate(detailsTemplate), events),
 	order: new OrderView(cloneTemplate(orderTemplate), events),
 };
 
-// api functions
 const getProducts = () => {
 	catalogView.render({
 		content: loaderView.render(),
@@ -100,7 +92,50 @@ const getProducts = () => {
 		});
 };
 
-// events
+const postOrder = () => {
+	modalView.render({
+		content: loaderView.render({
+			text: 'Отправка формы...',
+		}),
+	});
+
+	const orderData: TOrderRequest = {
+		...orderModel.getFields(),
+		total: basketModel.total,
+		items: basketModel.items,
+	};
+
+	api.postOrder(orderData)
+		.then(({ total }) => {
+			basketModel.resetState();
+			events.emit('basket:change');
+
+			catalogModel.cards.forEach((card) => {
+				card.isInBasket = false;
+			});
+
+			orderModel.resetState();
+
+			events.emit('order:reset-view');
+
+			modalView.render({
+				content: successView.render({
+					text: `Списано ${formatNumber(total)} синапсов`,
+				}),
+			});
+		})
+		.catch((err) => {
+			modalView.render({
+				content: new NotifyView(cloneTemplate(errorTemplate), {
+					onClick() {
+						postOrder();
+					},
+				}).render({
+					text: err,
+				}),
+			});
+		});
+};
 
 events.on('cards:change', (data: { cards: CardModel[] }) => {
 	catalogView.render({
@@ -201,7 +236,7 @@ events.on(
 );
 
 events.on('order:errors-change', ({ step, fields }: IOrderFormErrors) => {
-	orderViews[step].valid = getObjectLength(fields);
+	orderViews[step].valid = !getObjectLength(fields);
 	orderViews[step].errors = Object.values(fields)
 		.filter((field) => !!field)
 		.join('<br/>');
@@ -210,8 +245,9 @@ events.on('order:errors-change', ({ step, fields }: IOrderFormErrors) => {
 events.on('order:details-submit', () => {
 	events.emit('order:open-step-order');
 });
+
 events.on('order:order-submit', () => {
-	console.log('Submit');
+	postOrder();
 });
 
 events.on('modal:open', () => {
@@ -223,5 +259,3 @@ events.on('modal:close', () => {
 });
 
 getProducts();
-
-// @ts-ignore

@@ -59,4 +59,13 @@ export class OrderModel extends Model<IOrderModel> {
 		this.formErrors = errors;
 		this.events.emit('order:errors-change', { step, fields: this.formErrors });
 	}
+
+	getFields(): Partial<IOrderFields> {
+		return Object.values(this.fields).reduce((acc, val) => ({ ...acc, ...val }), {});
+	}
+
+	resetState() {
+		this.fields = this.getResetFields();
+		this.formErrors = {};
+	}
 }

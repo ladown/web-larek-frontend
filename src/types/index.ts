@@ -101,7 +101,7 @@ export interface INotifyViewActions {
 	onClickConfirm?: () => void;
 }
 
-export type TOrderRequest = IOrderFields & Pick<IBasketModel<string>, 'items' | 'total'>;
+export type TOrderRequest = Partial<IOrderFields> & Pick<IBasketModel<string>, 'items' | 'total'>;
 
 export interface IWebLarekAPI {
 	getProducts(): Promise<ICatalog>;

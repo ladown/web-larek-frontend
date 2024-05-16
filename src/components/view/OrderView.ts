@@ -56,6 +56,16 @@ export class OrderView extends View<HTMLFormElement, HTMLFormElement> {
 
 			this.events.emit(`order:${formName}-submit`);
 		});
+
+		this.events.on('order:reset-view', () => {
+			this.valid = false;
+			this.errors = '';
+			this.container.reset();
+
+			this._buttons.forEach((button) => {
+				this.toggleClass(button, this.buttonModifier, false);
+			});
+		});
 	}
 
 	protected onFieldChange(target: HTMLInputElement | HTMLButtonElement, field: keyof IOrderFields, value: string) {
@@ -71,6 +81,12 @@ export class OrderView extends View<HTMLFormElement, HTMLFormElement> {
 	}
 
 	set valid(value: boolean) {
-		this._submit.disabled = value;
+		this._submit.disabled = !value;
+
+		if (value) {
+			this.setHidden(this._errors);
+		} else {
+			this.setVisible(this._errors);
+		}
 	}
 }
