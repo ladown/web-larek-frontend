@@ -91,6 +91,7 @@ export interface INotifyView {
 
 export interface INotifyViewActions {
 	onClick?: () => void;
+	onClickConfirm?: () => void;
 }
 
 export type TOrderRequest = IOrderFields & Pick<IBasketModel<string>, 'items' | 'total'>;

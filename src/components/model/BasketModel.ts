@@ -10,9 +10,7 @@ export class BasketModel extends Model<IBasketModel<string>> {
 	constructor(data: Partial<IBasketModel<string>>, events: IEventEmitter) {
 		super(data, events);
 
-		this._count = 0;
-		this._items = [];
-		this._total = 0;
+		this.resetState();
 	}
 
 	set count(value: number) {
@@ -23,16 +21,8 @@ export class BasketModel extends Model<IBasketModel<string>> {
 		return this._count;
 	}
 
-	set items(value: CardModel | CardModel[]) {
-		(Array.isArray(value) ? value : [value]).forEach((item) => {
-			this._items.push(item.id);
-
-			if (typeof item.price === 'number') {
-				this.total = item.price;
-			}
-
-			this.count += 1;
-		});
+	set items(value: string | string[]) {
+		this._items = Array.isArray(value) ? value : [value];
 	}
 
 	get items(): string[] {
@@ -40,14 +30,42 @@ export class BasketModel extends Model<IBasketModel<string>> {
 	}
 
 	set total(value: number) {
-		this._total += value;
+		this._total = value;
 	}
 
 	get total(): number {
 		return this._total;
 	}
 
-	clearState() {
+	addCardToBasket(card: CardModel) {
+		card.isInBasket = true;
+
+		this.items.push(card.id);
+
+		if (typeof card.price === 'number') {
+			this.total += card.price;
+		}
+
+		this.count += 1;
+
+		this.events.emit('basket:change');
+	}
+
+	removeCardFromBasket(card: CardModel) {
+		card.isInBasket = false;
+
+		if (typeof card.price === 'number') {
+			this.total -= card.price;
+		}
+
+		this.count -= 1;
+
+		this.items = this.items.filter((id) => id !== card.id);
+
+		this.events.emit('basket:change');
+	}
+
+	resetState() {
 		this.count = 0;
 		this.items = [];
 		this.total = 0;

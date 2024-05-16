@@ -3,16 +3,22 @@ import { INotifyView, INotifyViewActions } from '../../types/';
 
 export class NotifyView extends View<INotifyView> {
 	protected _text: HTMLParagraphElement;
-	protected _button: HTMLElement | null;
+	protected _buttonClose: HTMLElement | null;
+	protected _buttonConfirm: HTMLElement | null;
 
 	constructor(container: HTMLElement, actions?: INotifyViewActions) {
 		super(container);
 
 		this._text = container.querySelector('.notify__description');
-		this._button = container.querySelector('.button');
+		this._buttonClose = container.querySelector('.notify__close');
+		this._buttonConfirm = container.querySelector('.notify__confirm');
 
-		if (this._button && actions?.onClick) {
-			this._button.addEventListener('click', actions.onClick);
+		if (this._buttonClose && actions?.onClick) {
+			this._buttonClose.addEventListener('click', actions.onClick);
+		}
+
+		if (this._buttonConfirm && actions?.onClickConfirm) {
+			this._buttonConfirm.addEventListener('click', actions.onClickConfirm);
 		}
 	}
 

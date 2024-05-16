@@ -244,22 +244,48 @@
 			<div class="notify notify_success">
 				<h2 class="notify__title">Заказ оформлен</h2>
 				<p class="notify__description">Списано 0 синапсов</p>
-				<button class="button notify__close">За новыми покупками!</button>
+				<ul class="notify__buttons">
+					<li class="notify__buttons-item">
+						<button class="button notify__close">За новыми покупками!</button>
+					</li>
+				</ul>
 			</div>
 		</template>
 
 		<template id="empty">
-			<div class="notify notify_empty">
+			<li class="notify notify_empty">
 				<h2 class="notify__title">Тут пока ничего</h2>
-				<button class="button notify__close">За новыми покупками!</button>
-			</div>
+				<ul class="notify__buttons">
+					<li class="notify__buttons-item">
+						<button class="button notify__close">За новыми покупками!</button>
+					</li>
+				</ul>
+			</li>
 		</template>
 
 		<template id="error">
 			<div class="notify notify_error">
 				<h2 class="notify__title">Что-то пошло не так</h2>
 				<p class="notify__description">Текст ошибки</p>
-				<button class="button notify__close">Попробовать еще раз</button>
+				<ul class="notify__buttons">
+					<li class="notify__buttons-item">
+						<button class="button notify__close">Попробовать еще раз</button>
+					</li>
+				</ul>
+			</div>
+		</template>
+
+		<template id="delete-confirm">
+			<div class="notify">
+				<h2 class="notify__title">Вы уверены, что хотите удалить товар из корзины?</h2>
+				<ul class="notify__buttons">
+					<li class="notify__buttons-item">
+						<button class="button notify__confirm">Да</button>
+					</li>
+					<li class="notify__buttons-item">
+						<button class="button notify__close">Нет</button>
+					</li>
+				</ul>
 			</div>
 		</template>
 

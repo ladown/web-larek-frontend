@@ -41,6 +41,7 @@ const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
 const contactsTemplate = ensureElement<HTMLTemplateElement>('#contacts');
 const loaderTemplate = ensureElement<HTMLTemplateElement>('#loader');
 const errorTemplate = ensureElement<HTMLTemplateElement>('#error');
+const deleteConfirmTemplate = ensureElement<HTMLTemplateElement>('#delete-confirm');
 
 // global declaration
 const events = new EventEmitter();
@@ -117,12 +118,10 @@ events.on('preview:change', (preview: CardModel) => {
 	modalView.render({
 		content: new CardPreviewView(cloneTemplate(cardPreviewTemplate), {
 			onClick() {
-				preview.isInBasket = true;
-
 				(this as HTMLButtonElement).textContent = 'Уже в корзине';
 				(this as HTMLButtonElement).disabled = true;
 
-				events.emit('basket:change', preview);
+				basketModel.addCardToBasket(preview);
 			},
 		}).render({
 			id: preview.id,
@@ -143,9 +142,7 @@ events.on('basket:open', () => {
 	});
 });
 
-events.on('basket:change', (card: CardModel) => {
-	basketModel.items = card;
-
+events.on('basket:change', () => {
 	basketView.render({
 		count: basketModel.count,
 		total: basketModel.total,
@@ -153,7 +150,17 @@ events.on('basket:change', (card: CardModel) => {
 			const data = catalogModel.cards.find((cardItem) => cardItem.id === id);
 			const cardBasket = new CardBasketView(cloneTemplate(cardBasketTemplate), {
 				onClick() {
-					console.log('Delete card');
+					modalView.render({
+						content: new NotifyView(cloneTemplate(deleteConfirmTemplate), {
+							onClick() {
+								events.emit('basket:open');
+							},
+							onClickConfirm() {
+								basketModel.removeCardFromBasket(data);
+								events.emit('basket:open');
+							},
+						}).render(),
+					});
 				},
 			});
 			return cardBasket.render({
