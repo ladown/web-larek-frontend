@@ -1,6 +1,7 @@
 import { Model } from '../base/Model';
 import { IBasketModel } from '../../types';
 import { IEventEmitter } from '../base/EventEmitter.js';
+import { CardModel } from './CardModel.js';
 
 export class BasketModel extends Model<IBasketModel> {
 	protected _count: number;
@@ -23,8 +24,16 @@ export class BasketModel extends Model<IBasketModel> {
 		return this._count;
 	}
 
-	set items(value: string | string[]) {
-		this._items.push(...(Array.isArray(value) ? value : [value]));
+	set items(value: CardModel | CardModel[]) {
+		(Array.isArray(value) ? value : [value]).forEach((item) => {
+			this._items.push(item.id);
+
+			if (typeof item.price === 'number') {
+				this.total = item.price;
+			}
+
+			this.count += 1;
+		});
 	}
 
 	get items(): string[] {
@@ -32,7 +41,7 @@ export class BasketModel extends Model<IBasketModel> {
 	}
 
 	set total(value: number) {
-		this._total = value;
+		this._total += value;
 	}
 
 	get total(): number {

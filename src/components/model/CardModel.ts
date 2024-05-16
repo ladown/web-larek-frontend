@@ -8,7 +8,8 @@ export class CardModel extends Model<ICardModel> {
 	image: string;
 	title: string;
 	category: string;
-	price: number | null;
+	price: string | number | null;
+	isInBasket = false;
 
 	get categoryModifier(): string {
 		switch (this.category.toLowerCase()) {
@@ -26,7 +27,7 @@ export class CardModel extends Model<ICardModel> {
 	}
 
 	get formattedPrice(): string {
-		if (this.price) {
+		if (this.price && typeof this.price === 'number') {
 			return `${formatNumber(this.price)} синапсов`;
 		} else {
 			return 'Бесценно';

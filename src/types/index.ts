@@ -4,7 +4,15 @@ export interface ICardModel {
 	image: string;
 	title: string;
 	category: string;
-	price: number | null;
+	price: string | number | null;
+	categoryModifier?: string;
+	buttonState: boolean;
+}
+
+export interface ICardBasketView {
+	label: number;
+	title: string;
+	price: string;
 }
 
 export interface ICardViewActions {
@@ -29,6 +37,12 @@ export interface ICommonErrorResponse {
 	error: string;
 }
 
+export interface IBasketView {
+	count: number;
+	items: HTMLElement[];
+	total: number;
+}
+
 export interface IBasketModel {
 	count: number;
 	items: string[];
@@ -46,6 +60,10 @@ export interface IOrderModel {
 	fieldsValue: IOrderFields;
 }
 
+export interface ICatalogView {
+	content: HTMLElement | HTMLElement[];
+}
+
 export interface ICatalogModel {
 	cards: ICardModel[];
 }
@@ -58,8 +76,10 @@ export interface ILoaderView {
 
 export interface INotifyView {
 	text: string;
-	buttonModifier: string;
-	buttonText: string;
+}
+
+export interface INotifyViewActions {
+	onClick?: () => void;
 }
 
 export type TOrderRequest = IOrderFields & Pick<IBasketModel, 'items' | 'total'>;

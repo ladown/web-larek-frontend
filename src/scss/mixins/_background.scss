@@ -1,6 +1,6 @@
 @mixin background($image, $size: 'cover') {
 	background: url($image) no-repeat center;
-	background-size: $size;
+	background-size: #{$size};
 }
 
 @mixin mask($image, $size: cover) {

@@ -155,14 +155,6 @@
 			</div>
 		</div>
 
-		<template id="success">
-			<div class="order-success">
-				<h2 class="order-success__title">Заказ оформлен</h2>
-				<p class="order-success__description">Списано 0 синапсов</p>
-				<button class="button order-success__close">За новыми покупками!</button>
-			</div>
-		</template>
-
 		<template id="card-catalog">
 			<button class="gallery__item card">
 				<span class="card__category card__category_soft">софт-скил</span>
@@ -246,6 +238,40 @@
 					<span class="form__errors"></span>
 				</div>
 			</form>
+		</template>
+
+		<template id="success">
+			<div class="notify notify_success">
+				<h2 class="notify__title">Заказ оформлен</h2>
+				<p class="notify__description">Списано 0 синапсов</p>
+				<button class="button notify__close">За новыми покупками!</button>
+			</div>
+		</template>
+
+		<template id="empty">
+			<div class="notify notify_empty">
+				<h2 class="notify__title">Тут пока ничего</h2>
+				<button class="button notify__close">За новыми покупками!</button>
+			</div>
+		</template>
+
+		<template id="error">
+			<div class="notify notify_error">
+				<h2 class="notify__title">Что-то пошло не так</h2>
+				<p class="notify__description">Текст ошибки</p>
+				<button class="button notify__close">Попробовать еще раз</button>
+			</div>
+		</template>
+
+		<template id="loader">
+			<div class="loader">
+				<div class="loader__icon">
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+				<div class="loader__text">Результаты загружаются ...</div>
+			</div>
 		</template>
 	</body>
 </html>

@@ -11,6 +11,7 @@
 @use '../common.blocks/card';
 @use '../common.blocks/basket';
 @use '../common.blocks/order';
-@use '../common.blocks/order-success';
+@use '../common.blocks/notify';
+@use '../common.blocks/loader';
 @use 'variables' as *;
 @use 'mixins';

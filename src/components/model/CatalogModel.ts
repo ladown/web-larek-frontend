@@ -1,14 +1,12 @@
 import { Model } from '../base/Model';
+import { CardModel } from './CardModel';
 import { ICatalogModel, ICardModel } from '../../types/';
 
 export class CatalogModel extends Model<ICatalogModel> {
-	protected _cards: ICardModel[];
+	cards: CardModel[];
 
-	get cards(): ICardModel[] {
-		return this._cards;
-	}
-
-	set cards(value: ICardModel[]) {
-		this._cards = value;
+	setCards(data: ICardModel[]) {
+		this.cards = data.map((card) => new CardModel(card, this.events));
+		this.emitChanges('cards:change', { cards: this.cards });
 	}
 }
