@@ -41,8 +41,6 @@ export interface ICatalog {
 	items: TCard[];
 }
 
-export type TOrderPayment = 'online' | 'cash';
-
 export type TOrderModel = IOrderFields & Pick<IBasketModel<string>, 'total' | 'items'>;
 
 export interface IOrderResult {
@@ -60,11 +58,20 @@ export interface IBasketModel<T> {
 	total: number;
 }
 
+export type TOrderSteps = 'details' | 'order';
+export type TOrderStepsFields = Array<Partial<keyof IOrderFields>>;
+export type TOrderFields = Record<TOrderSteps, Partial<IOrderFields>>;
+
 export interface IOrderFields {
-	payment: TOrderPayment;
+	payment: string;
 	email: string;
 	phone: string;
 	address: string;
+}
+
+export interface IOrderFormErrors {
+	step: TOrderSteps;
+	fields: Partial<IOrderFields>;
 }
 
 export interface IOrderModel {
@@ -79,7 +86,7 @@ export interface ICatalogModel {
 	cards: ICardModel[];
 }
 
-export type TFormErrors = Partial<Record<keyof IOrderModel, string>>;
+export type TFormErrors = Partial<Record<keyof IOrderFields, string>>;
 
 export interface ILoaderView {
 	text: string;

@@ -150,3 +150,7 @@ export function makeObservable<T extends object>(obj: T, callback: Callback<T>):
 		},
 	});
 }
+
+export const getObjectLength = (object: { [key: string]: any }): boolean => {
+	return object !== null && object !== undefined && typeof object === 'object' ? !!Object.values(object)?.length : false;
+};

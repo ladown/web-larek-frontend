@@ -33,6 +33,10 @@ export class BasketView extends View<IBasketModel<HTMLElement>> {
 			this.events.emit('basket:open');
 		});
 
+		this._submit.addEventListener('click', () => {
+			this.events.emit('order:open-step-details');
+		});
+
 		this.items = [];
 	}
 

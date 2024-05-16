@@ -2,7 +2,7 @@ import './scss/styles.scss';
 
 // imports
 // types import
-import { ICatalog, ICardModel } from './types';
+import { IOrderFields, IOrderFormErrors } from './types';
 
 // base import
 import { EventEmitter } from './components/base/EventEmitter';
@@ -11,6 +11,7 @@ import { EventEmitter } from './components/base/EventEmitter';
 import { CatalogModel } from './components/model/CatalogModel';
 import { CardModel } from './components/model/CardModel';
 import { BasketModel } from './components/model/BasketModel';
+import { OrderModel } from './components/model/OrderModel';
 
 // view import
 import { CatalogView } from './components/view/CatalogView';
@@ -19,6 +20,7 @@ import { BasketView } from './components/view/BasketView';
 import { ModalView } from './components/view/ModalView';
 import { NotifyView } from './components/view/NotifyView';
 import { LoaderView } from './components/view/LoaderView';
+import { OrderView } from './components/view/OrderView';
 
 // presenter import
 
@@ -28,7 +30,7 @@ import { Page } from './components/common/Page';
 
 // other import
 import { API_URL, CDN_URL } from './utils/constants';
-import { cloneTemplate, createElement, ensureElement } from './utils/utils';
+import { cloneTemplate, getObjectLength, ensureElement } from './utils/utils';
 
 // declarations
 // templates declaration
@@ -38,7 +40,8 @@ const cardCatalogTemplate = ensureElement<HTMLTemplateElement>('#card-catalog');
 const cardPreviewTemplate = ensureElement<HTMLTemplateElement>('#card-preview');
 const cardBasketTemplate = ensureElement<HTMLTemplateElement>('#card-basket');
 const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
-const contactsTemplate = ensureElement<HTMLTemplateElement>('#contacts');
+const detailsTemplate = ensureElement<HTMLTemplateElement>('#details');
+const orderTemplate = ensureElement<HTMLTemplateElement>('#order');
 const loaderTemplate = ensureElement<HTMLTemplateElement>('#loader');
 const errorTemplate = ensureElement<HTMLTemplateElement>('#error');
 const deleteConfirmTemplate = ensureElement<HTMLTemplateElement>('#delete-confirm');
@@ -51,6 +54,7 @@ const page = new Page(document.body, events);
 // model declaration
 const catalogModel = new CatalogModel({}, events);
 const basketModel = new BasketModel({}, events);
+const orderModel = new OrderModel({}, events);
 
 // view declaration
 const catalogView = new CatalogView(document.body);
@@ -67,6 +71,11 @@ const basketView = new BasketView(
 	}).render(),
 );
 const loaderView = new LoaderView(cloneTemplate(loaderTemplate));
+
+const orderViews = {
+	details: new OrderView(cloneTemplate(detailsTemplate), events),
+	order: new OrderView(cloneTemplate(orderTemplate), events),
+};
 
 // api functions
 const getProducts = () => {
@@ -170,6 +179,39 @@ events.on('basket:change', () => {
 			});
 		}),
 	});
+});
+
+events.on('order:open-step-details', () => {
+	modalView.render({
+		content: orderViews.details.render(),
+	});
+});
+
+events.on('order:open-step-order', () => {
+	modalView.render({
+		content: orderViews.order.render(),
+	});
+});
+
+events.on(
+	'order:field-change',
+	(data: { target: HTMLInputElement | HTMLButtonElement; field: keyof IOrderFields; value: string }) => {
+		orderModel.setFieldValue(data.field, data.value, data.target);
+	},
+);
+
+events.on('order:errors-change', ({ step, fields }: IOrderFormErrors) => {
+	orderViews[step].valid = getObjectLength(fields);
+	orderViews[step].errors = Object.values(fields)
+		.filter((field) => !!field)
+		.join('<br/>');
+});
+
+events.on('order:details-submit', () => {
+	events.emit('order:open-step-order');
+});
+events.on('order:order-submit', () => {
+	console.log('Submit');
 });
 
 events.on('modal:open', () => {

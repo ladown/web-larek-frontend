@@ -1,57 +1,62 @@
-import { Model } from '../base/Model.ts';
-import { IOrderModel, TFormErrors, IOrderFields, TOrderPayment, IEventEmitter } from '../../types/';
+import { Model } from '../base/Model';
+import { TOrderSteps, TOrderStepsFields, TOrderFields, IOrderModel, TFormErrors, IOrderFields } from '../../types/';
 
 export class OrderModel extends Model<IOrderModel> {
-	protected _fields: IOrderFields;
+	protected fields: TOrderFields = this.getResetFields();
 	formErrors: TFormErrors = {};
+	steps: Record<TOrderSteps, TOrderStepsFields> = {
+		details: ['payment', 'address'],
+		order: ['email', 'phone'],
+	};
+	fieldsKeyMapper: Record<keyof IOrderFields, string> = {
+		payment: 'Способ оплаты',
+		email: 'Email',
+		phone: 'Телефон',
+		address: 'Адрес доставки',
+	};
 
-	constructor(data: Partial<IOrderModel>, events: IEventEmitter) {
-		super(data, events);
-
-		this._fields = this.getResetFields();
+	getStepKey(field: keyof IOrderFields): TOrderSteps | '' {
+		return Object.entries(this.fields).reduce((acc: TOrderSteps, [key, value]: [TOrderSteps, Partial<IOrderFields>]) => {
+			return field in value ? (acc = key) : acc;
+		}, '');
 	}
 
-	get fields(): IOrderFields {
-		return this._fields;
-	}
+	setFieldValue(field: keyof IOrderFields, value: string, target?: HTMLInputElement | HTMLButtonElement) {
+		const step: TOrderSteps | '' = this.getStepKey(field);
 
-	setFieldValue(field: keyof IOrderFields, value: TOrderPayment | string, target?: HTMLInputElement) {
-		if (field === 'payment') {
-			this._fields[field] = value as TOrderPayment;
-		} else {
-			this._fields[field] = value;
+		if (step) {
+			this.fields[step][field] = value;
+			this.validateFields(field, step, target);
 		}
-
-		if (target) {
-			this.validateFields(target, field);
-		}
 	}
 
-	getResetFields(): IOrderFields {
+	getResetFields(): TOrderFields {
 		return {
-			payment: 'online',
-			email: '',
-			phone: '',
-			address: '',
+			details: {
+				payment: '',
+				address: '',
+			},
+			order: {
+				email: '',
+				phone: '',
+			},
 		};
 	}
 
-	validateFields(target: HTMLInputElement, field: keyof IOrderFields): boolean {
-		const errors: typeof this.formErrors = {};
+	validateFields(field: keyof IOrderFields, step: TOrderSteps, target: HTMLInputElement | HTMLButtonElement) {
+		const errors: TFormErrors = {};
 
 		if (!target.checkValidity()) {
 			errors[field] = target.validationMessage;
 		}
 
-		Object.keys(this._fields).forEach((key) => {
-			if (!errors[key] && !this._fields[key]) {
-				errors[key] = `Необходимо указать поле ${key}`;
+		Object.keys(this.fields[step]).forEach((key: keyof IOrderFields) => {
+			if (!errors[key] && !this.fields[step][key]) {
+				errors[key] = `Необходимо указать поле "${this.fieldsKeyMapper[key]}"`;
 			}
 		});
 
 		this.formErrors = errors;
-		this.events.emit('formErrors:change', this.formErrors);
-
-		return Object.keys(errors).length === 0;
+		this.events.emit('order:errors-change', { step, fields: this.formErrors });
 	}
 }

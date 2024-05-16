@@ -1,5 +1,7 @@
-export abstract class View<T> {
-	protected constructor(protected readonly container: HTMLElement) {}
+import sanitizeHTML from 'sanitize-html';
+
+export abstract class View<T, K = HTMLElement> {
+	protected constructor(protected readonly container: K) {}
 
 	toggleClass(element: HTMLElement, className: string, force?: boolean) {
 		element.classList.toggle(className, force);
@@ -38,7 +40,11 @@ export abstract class View<T> {
 		}
 	}
 
-	render(data?: Partial<T>): HTMLElement {
+	protected setInnerHTML(element: HTMLElement, value: string) {
+		element.innerHTML = sanitizeHTML(value);
+	}
+
+	render(data?: Partial<T>): K {
 		Object.assign(this as object, data ?? {});
 		return this.container;
 	}
