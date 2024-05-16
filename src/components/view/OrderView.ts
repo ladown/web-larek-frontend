@@ -68,14 +68,6 @@ export class OrderView extends View<HTMLFormElement, HTMLFormElement> {
 		});
 	}
 
-	protected onFieldChange(target: HTMLInputElement | HTMLButtonElement, field: keyof IOrderFields, value: string) {
-		this.events.emit(`order:field-change`, {
-			target,
-			field,
-			value,
-		});
-	}
-
 	set errors(value: string) {
 		this.setInnerHTML(this._errors, value);
 	}
@@ -88,5 +80,13 @@ export class OrderView extends View<HTMLFormElement, HTMLFormElement> {
 		} else {
 			this.setVisible(this._errors);
 		}
+	}
+
+	protected onFieldChange(target: HTMLInputElement | HTMLButtonElement, field: keyof IOrderFields, value: string) {
+		this.events.emit(`order:field-change`, {
+			target,
+			field,
+			value,
+		});
 	}
 }

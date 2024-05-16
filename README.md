@@ -72,21 +72,22 @@ pnpm build
 
 Содержит в себе базову логику для отправки запросов. К конструкторе принимает `baseUrl: string` и `options: RequestInit = {}`, которые формирует базу для запроса. В классе имплементированы следующие методы:
 
--   `handleResponse(response: Response): Promise<object>` - служит для обработки запроса с сервера, он возвращает либо `.json` ответ от сервера, либо ошибку;
--   `get(uri: string)`, который принимает `uri` запроса и делает `GET` запрос по итоговому `url`;
--   `post(uri: string, data: object, method: ApiPostMethods = 'POST')`, который принимает endpoint, объект с данными data, а также метод запроса, который по умолчанию равен `POST`, но может быть одним из следующих значений `'POST' | 'PUT' | 'DELETE'`. Метод делает запрос по итоговому url и передает полученный ранее объект `data`.
+-   `protected async handleResponse(response: Response): Promise<object>` - служит для обработки запроса с сервера, он возвращает либо `.json` ответ от сервера, либо ошибку;
+-   `async get(uri: string)`, который принимает `uri` запроса и делает `GET` запрос по итоговому `url`;
+-   `async post(uri: string, data: object, method: ApiPostMethods = 'POST')`, который принимает endpoint, объект с данными data, а также метод запроса, который по умолчанию равен `POST`, но может быть одним из следующих значений `'POST' | 'PUT' | 'DELETE'`. Метод делает запрос по итоговому url и передает полученный ранее объект `data`.
 
 #### Класс View
 
 Абстрактный класс, который содержит в себе базовую логику для работы с `html` элементами. Имеет два generic типа `T`, предназначенный для метода `render`, чтобы обрабатывать определенные данные и `K`, предназначенный для контроля над возвращаемом типом элемента метода `render`. Конструктор принимает `container: HTMLElement`. В классе имплементированы следующие методы:
 
--   `setText(element: HTMLElement, value: unknown)` - устанавливает значение `value` переданному `element`;
+-   `protected setText(element: HTMLElement, value: unknown)` - устанавливает значение `value` переданному `element`;
+-   `protected setHidden(element: HTMLElement)` - скрывает переданный `element` при помощи `display: none;`;
+-   `protected setVisible(element: HTMLElement)` - показывает переданный `element` при помощи удаления стиля `display`;
+-   `protected setImage(element: HTMLImageElement, src: string, alt?: string)` - устанавливает `url` для переданной картинки, а также может установить `alt` для картинки, если этот параметр был передан
+-   `protected setInnerHTML(element: HTMLElement, value: string)` - устанавливает значение `value` для свойства `innerHTML` для переданного элемента. Перед установки значению оно обрабатывается функцией `sanitizeHTML`, для исключения `XSS` атак;
+-   `toggleClass(element: HTMLElement, className: string, force?: boolean)` - способен тоглить переданный класс `className` у элемента `element`, также возможно задавать состояние самостоятельно при помощи `force` ;
 -   `setDisabled(element: HTMLElement, state: boolean)` - тоглит атрибут `disabled` для переданного `element` согласно параметру `state`;
--   `setHidden(element: HTMLElement)` - скрывает переданный `element` при помощи `display: none;`;
--   `setVisible(element: HTMLElement)` - показывает переданный `element` при помощи удаления стиля `display`;
--   `setImage(element: HTMLImageElement, src: string, alt?: string)` - устанавливает `url` для переданной картинки, а также может установить `alt` для картинки, если этот параметр был передан
--   `setInnerHTML(element: HTMLElement, value: string)` - устанавливает значение `value` для свойства `innerHTML` для переданного элемента. Перед установки значению оно обрабатывается функцией `sanitizeHTML`, для исключения `XSS` атак;
--   `render(data?: Partial<T>): HTMLElement` - параметр `data` имеет generic тип `T`, который был обозначен для класса `View`, вызывает аксессоры класса и возвращает `HTMLElement`.
+-   `render(data?: Partial<T>): K` - параметр `data` имеет generic тип `T`, который был обозначен для класса `View`, вызывает аксессоры класса и возвращает generic тип `K`.
 
 #### Класс EventEmitter
 
@@ -190,9 +191,9 @@ pnpm build
 
 Класс заказа, наследуемый от общего класса `View`, который имеет тип `<HTMLFormElement, HTMLFormElement>`. При инициализации устанавливаем слушатели события на кнопки, для переключения методов оплаты, на поля ввода, чтобы заполнять модель заказа, а также на отправку формы каждого шага. Также слушаем событие `order:reset-view` для сброса состояния представления при отправки заказа. В классе имплементированы следующие методы:
 
--   `protected onFieldChange(target: HTMLInputElement | HTMLButtonElement, field: keyof IOrderFields, value: string)` - генерируем события изменения поля заказа;
 -   `set errors(value: string)` - устанавливаем текст ошибок;
 -   `set valid(value: boolean)` - устанавливаем валидное состояние для кнопки и невалидное состояние для текста ошибок.
+-   `protected onFieldChange(target: HTMLInputElement | HTMLButtonElement, field: keyof IOrderFields, value: string)` - генерируем события изменения поля заказа.
 
 #### Класс CatalogView
 
@@ -206,7 +207,7 @@ pnpm build
 
 -   `set content(value: HTMLElement | string)` - установка переданного контента;
 -   `protected open()` - открытие модального окна;
--   `	protected close()` - закрытие модального окна;
+-   `protected close()` - закрытие модального окна;
 -   `render(data: IModalView): HTMLElement` - рендер функция модального окна.
 
 #### Класс LoaderView
@@ -247,9 +248,9 @@ pnpm build
 
 Класс представляет собой интерфейс для работы с запросами. В конструктор принимает следующие параметры - `cdn: string, baseUrl: string, options?: RequestInit`. В конструкторе через композицию инициализируем базовый класс Api для работы с запросами. В классе имплементированы следующие методы:
 
--   `getProducts(): Promise<ICatalog>` - метод позволяет отправить запрос с `GET` методом для получения списка продуктов;
--   `getProduct(id: string): Promise<ICardModel>` - метод позволяет отправить запрос с `GET` методом для получения конкретного продукта по переданному id;
--   `postOrder(order: TOrderRequest): Promise<IOrderResult>` - метод позволяет отправить запрос с `POST` методом для отправки заказа, который передан в качестве аргумента `order`.
+-   `async getProducts(): Promise<ICatalog>` - метод позволяет отправить запрос с `GET` методом для получения списка продуктов;
+-   `async getProduct(id: string): Promise<TCard>` - метод позволяет отправить запрос с `GET` методом для получения конкретного продукта по переданному id;
+-   `async postOrder(order: TOrderRequest): Promise<IOrderResult>` - метод позволяет отправить запрос с `POST` методом для отправки заказа, который передан в качестве аргумента `order`.
 
 ### Класс Page
 
