@@ -89,10 +89,11 @@ const getProducts = () => {
 			catalogView.render({
 				content: new NotifyView(cloneTemplate(errorTemplate), {
 					onClick() {
-						getProducts();
+						window.location.reload();
 					},
 				}).render({
 					text: err,
+					buttonText: 'Перезагрузить страницу',
 				}),
 			});
 		});

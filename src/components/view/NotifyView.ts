@@ -42,4 +42,8 @@ export class NotifyView extends View<INotifyView> {
 			}
 		}
 	}
+
+	set buttonText(value: string) {
+		this.setText(this._buttonClose, value);
+	}
 }

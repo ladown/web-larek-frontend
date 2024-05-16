@@ -92,6 +92,7 @@ export interface ILoaderView {
 export interface INotifyView {
 	text: string;
 	buttonsVisible: boolean;
+	buttonText: string;
 }
 
 export interface INotifyViewActions {
