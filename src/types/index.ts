@@ -41,15 +41,9 @@ export interface ICatalog {
 	items: TCard[];
 }
 
-export type TOrderModel = IOrderFields & Pick<IBasketModel<string>, 'total' | 'items'>;
-
 export interface IOrderResult {
 	id: string;
 	total: number;
-}
-
-export interface ICommonErrorResponse {
-	error: string;
 }
 
 export interface IBasketModel<T> {
@@ -75,7 +69,10 @@ export interface IOrderFormErrors {
 }
 
 export interface IOrderModel {
-	fieldsValue: IOrderFields;
+	fields: TOrderFields;
+	formErrors: TFormErrors;
+	steps: Record<TOrderSteps, TOrderStepsFields>;
+	fieldsKeyMapper: Record<keyof IOrderFields, string>;
 }
 
 export interface ICatalogView {
