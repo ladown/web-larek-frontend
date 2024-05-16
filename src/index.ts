@@ -135,10 +135,11 @@ const postOrder = () => {
 			modalView.render({
 				content: new NotifyView(cloneTemplate(errorTemplate), {
 					onClick() {
-						postOrder();
+						events.emit('order:open-step-order');
 					},
 				}).render({
 					text: err,
+					buttonText: 'Вернутся назад',
 				}),
 			});
 		});
