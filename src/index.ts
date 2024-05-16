@@ -10,7 +10,9 @@ import { BasketModel } from './components/model/BasketModel';
 import { OrderModel } from './components/model/OrderModel';
 
 import { CatalogView } from './components/view/CatalogView';
-import { CardCatalogView, CardPreviewView, CardBasketView } from './components/view/CardView';
+import { CardCatalogView } from './components/view/CardCatalogView';
+import { CardPreviewView } from './components/view/CardPreviewView';
+import { CardBasketView } from './components/view/CardBasketView';
 import { BasketView } from './components/view/BasketView';
 import { ModalView } from './components/view/ModalView';
 import { NotifyView } from './components/view/NotifyView';
@@ -43,7 +45,12 @@ const catalogModel = new CatalogModel({}, events);
 const basketModel = new BasketModel({}, events);
 const orderModel = new OrderModel({}, events);
 
-const catalogView = new CatalogView(document.body);
+const catalogView = new CatalogView(
+	document.body,
+	new NotifyView(cloneTemplate(emptyTemplate)).render({
+		buttonsVisible: false,
+	}),
+);
 const modalView = new ModalView(ensureElement<HTMLElement>('#modal-container'), events);
 const basketView = new BasketView(
 	cloneTemplate(basketTemplate),

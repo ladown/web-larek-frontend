@@ -83,7 +83,7 @@ pnpm build
 -   `protected setText(element: HTMLElement, value: unknown)` - устанавливает значение `value` переданному `element`;
 -   `protected setHidden(element: HTMLElement)` - скрывает переданный `element` при помощи `display: none;`;
 -   `protected setVisible(element: HTMLElement)` - показывает переданный `element` при помощи удаления стиля `display`;
--   `protected setImage(element: HTMLImageElement, src: string, alt?: string)` - устанавливает `url` для переданной картинки, а также может установить `alt` для картинки, если этот параметр был передан
+-   `protected setImage(element: HTMLImageElement, src: string, alt?: string)` - устанавливает `url` для переданной картинки, а также может установить `alt` для картинки, если этот параметр был передан;
 -   `protected setInnerHTML(element: HTMLElement, value: string)` - устанавливает значение `value` для свойства `innerHTML` для переданного элемента. Перед установки значению оно обрабатывается функцией `sanitizeHTML`, для исключения `XSS` атак;
 -   `toggleClass(element: HTMLElement, className: string, force?: boolean)` - способен тоглить переданный класс `className` у элемента `element`, также возможно задавать состояние самостоятельно при помощи `force` ;
 -   `setDisabled(element: HTMLElement, state: boolean)` - тоглит атрибут `disabled` для переданного `element` согласно параметру `state`;
@@ -192,14 +192,14 @@ pnpm build
 Класс заказа, наследуемый от общего класса `View`, который имеет тип `<HTMLFormElement, HTMLFormElement>`. При инициализации устанавливаем слушатели события на кнопки, для переключения методов оплаты, на поля ввода, чтобы заполнять модель заказа, а также на отправку формы каждого шага. Также слушаем событие `order:reset-view` для сброса состояния представления при отправки заказа. В классе имплементированы следующие методы:
 
 -   `set errors(value: string)` - устанавливаем текст ошибок;
--   `set valid(value: boolean)` - устанавливаем валидное состояние для кнопки и невалидное состояние для текста ошибок.
+-   `set valid(value: boolean)` - устанавливаем валидное состояние для кнопки и невалидное состояние для текста ошибок;
 -   `protected onFieldChange(target: HTMLInputElement | HTMLButtonElement, field: keyof IOrderFields, value: string)` - генерируем события изменения поля заказа.
 
 #### Класс CatalogView
 
 Класс каталога, наследуемый от общего класса `View`, с типом `ICatalogView`. Предназначение для рендера карточек каталога. В классе имплементированы следующие методы:
 
--   `set content(data: HTMLElement | HTMLElement[])` - помещаем переданные карточки в разметку.
+-   `set content(data: HTMLElement | HTMLElement[])` - помещаем переданные карточки в разметку, если контента нет - показываем сообщение о том, что пока нет товаров.
 
 #### Класс ModalView
 
@@ -220,7 +220,8 @@ pnpm build
 
 Класс отображения уведомления пользователей, наследуемый от общего класса `View`, который имеет тип `INotifyView`. Предназначен для отображения сообщений, например, об ошибке или пустом состоянии. В классе имплементированы следующие методы:
 
--   `set text(value: string)` - установка текста.
+-   `set text(value: string)` - установка текста;
+-   `set buttonsVisible(value: boolean)` - скрываем или показываем кнопки.
 
 ### Презентер
 
@@ -240,7 +241,7 @@ pnpm build
 -   `order:${formName}-submit` - срабатывает после валидного заполнения одного из шага заказа. Имеет следующие виды - `order:details-submit` и `order:order-submit`;
 -   `order:reset-view` - сброс состояние представления заказа;
 -   `modal:open` - открытие любого модального окна;
--   `modal:close` - закрытие любого модального окна;
+-   `modal:close` - закрытие любого модального окна.
 
 ### Общее
 

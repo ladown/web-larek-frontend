@@ -3,6 +3,7 @@ import { INotifyView, INotifyViewActions } from '../../types/';
 
 export class NotifyView extends View<INotifyView> {
 	protected _text: HTMLParagraphElement;
+	protected _buttons: HTMLUListElement;
 	protected _buttonClose: HTMLElement | null;
 	protected _buttonConfirm: HTMLElement | null;
 
@@ -10,6 +11,7 @@ export class NotifyView extends View<INotifyView> {
 		super(container);
 
 		this._text = container.querySelector('.notify__description');
+		this._buttons = container.querySelector('.notify__buttons');
 		this._buttonClose = container.querySelector('.notify__close');
 		this._buttonConfirm = container.querySelector('.notify__confirm');
 
@@ -28,6 +30,16 @@ export class NotifyView extends View<INotifyView> {
 			this.setText(this._text, value);
 		} else {
 			this.setHidden(this._text);
+		}
+	}
+
+	set buttonsVisible(value: boolean) {
+		if (this._buttons) {
+			if (value) {
+				this.setVisible(this._buttons);
+			} else {
+				this.setHidden(this._buttons);
+			}
 		}
 	}
 }
