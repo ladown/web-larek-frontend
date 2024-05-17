@@ -33,9 +33,6 @@ export type TCardCommonFields = {
 	buttonText: string;
 };
 
-export type TCardCatalogView = Pick<TCard, 'id' | 'category' | 'title' | 'image' | 'price'> &
-	Pick<TCardCommonFields, 'categoryModifier'>;
-
 export type TCardPreviewView = ICardModel & Pick<TCardCommonFields, 'categoryModifier' | 'buttonState' | 'buttonText'>;
 
 export type TCardBasketView = Pick<ICardModel, 'title' | 'price'> & Pick<TCardCommonFields, 'label'>;

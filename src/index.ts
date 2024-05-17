@@ -10,7 +10,7 @@ import { BasketModel } from './components/model/BasketModel';
 import { OrderModel } from './components/model/OrderModel';
 
 import { CatalogView } from './components/view/CatalogView';
-import { CardCatalogView } from './components/view/CardCatalogView';
+import { CardView } from './components/view/CardView';
 import { CardPreviewView } from './components/view/CardPreviewView';
 import { CardBasketView } from './components/view/CardBasketView';
 import { BasketView } from './components/view/BasketView';
@@ -148,7 +148,7 @@ const postOrder = () => {
 events.on('cards:change', (data: { cards: CardModel[] }) => {
 	catalogView.render({
 		content: data.cards.map((card) => {
-			const cardCatalog = new CardCatalogView(cloneTemplate<HTMLButtonElement>(cardCatalogTemplate), {
+			const cardCatalog = new CardView(cloneTemplate<HTMLButtonElement>(cardCatalogTemplate), {
 				onClick() {
 					events.emit('preview:change', card);
 				},
