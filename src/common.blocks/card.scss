@@ -88,9 +88,11 @@
 		}
 	}
 
-	&__action {
+	&__button {
+		flex: 0 0 auto;
 	}
 
 	&__price {
+		flex: 1;
 	}
 }

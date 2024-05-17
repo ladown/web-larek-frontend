@@ -26,11 +26,19 @@ export interface ICardModel {
 
 export type TCard = Pick<ICardModel, 'id' | 'description' | 'image' | 'title' | 'category' | 'price'>;
 
-export type TCardCatalogView = Pick<TCard, 'id' | 'category' | 'title' | 'image' | 'price'> & { categoryModifier: string };
+export type TCardCommonFields = {
+	categoryModifier: string;
+	buttonState: boolean;
+	label: number;
+	buttonText: string;
+};
 
-export type TCardPreviewView = ICardModel & { categoryModifier: string; buttonState: boolean };
+export type TCardCatalogView = Pick<TCard, 'id' | 'category' | 'title' | 'image' | 'price'> &
+	Pick<TCardCommonFields, 'categoryModifier'>;
 
-export type TCardBasketView = Pick<ICardModel, 'title' | 'price'> & { label: number };
+export type TCardPreviewView = ICardModel & Pick<TCardCommonFields, 'categoryModifier' | 'buttonState' | 'buttonText'>;
+
+export type TCardBasketView = Pick<ICardModel, 'title' | 'price'> & Pick<TCardCommonFields, 'label'>;
 
 export interface ICardViewActions {
 	onClick?: () => void;

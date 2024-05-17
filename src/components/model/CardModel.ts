@@ -10,6 +10,7 @@ export class CardModel extends Model<ICardModel> {
 	category: string;
 	price: string | number | null;
 	isInBasket = false;
+	isNotSaleable = false;
 
 	get categoryModifier(): string {
 		switch (this.category.toLowerCase()) {
@@ -30,6 +31,7 @@ export class CardModel extends Model<ICardModel> {
 		if (this.price && typeof this.price === 'number') {
 			return `${formatNumber(this.price)} синапсов`;
 		} else {
+			this.isNotSaleable = true;
 			return 'Бесценно';
 		}
 	}

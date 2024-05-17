@@ -40,7 +40,7 @@ export class CardView<T> extends View<T> {
 	}
 
 	set price(value: string) {
-		this.setText(this._price, value);
+		this.setInnerHTML(this._price, value);
 	}
 
 	set categoryModifier(value: string) {

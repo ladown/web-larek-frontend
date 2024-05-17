@@ -181,9 +181,12 @@ events.on('preview:change', (preview: CardModel) => {
 			title: preview.title,
 			description: preview.description,
 			image: preview.image,
-			price: preview.formattedPrice,
+			price: preview.isNotSaleable
+				? `${preview.formattedPrice}<br/>Данный товар нельзя добавить в корзину`
+				: preview.formattedPrice,
 			categoryModifier: preview.categoryModifier,
-			buttonState: preview.isInBasket,
+			buttonState: preview.isInBasket || preview.isNotSaleable,
+			buttonText: preview.isInBasket ? 'Уже в корзине' : 'В корзину',
 		}),
 	});
 });

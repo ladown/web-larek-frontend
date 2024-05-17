@@ -17,6 +17,9 @@ export class CardPreviewView extends CardView<TCardPreviewView> {
 
 	set buttonState(value: boolean) {
 		this.setDisabled(this._button, value);
-		this.setText(this._button, value ? 'Уже в корзине' : 'В корзину');
+	}
+
+	set buttonText(value: string) {
+		this.setText(this._button, value);
 	}
 }
